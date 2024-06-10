@@ -2,10 +2,12 @@ import requests
 import sys
 import argparse
 from termcolor import colored
+requests.packages.urllib3.disable_warnings()
 
 parser = argparse.ArgumentParser(prog="WareMEye", description="Try all the IP spoofing headers at once.")
 parser.add_argument("targets_file", type=argparse.FileType('r'), help="File containing a line separated list of targets.")
 parser.add_argument("-i", dest="user_ip", help="The IP to spoof.")
+parser.add_argument("-x", dest="user_proxy", help="Proxy to use.")
 args = parser.parse_args()
 
 spoofing_ip = args.user_ip if (args.user_ip != None) else '127.0.0.1'
@@ -31,7 +33,7 @@ for ip_rewrite_header in ip_rewrite_headers_list:
 
 headers = {}
 cookies = {}
-proxies = {}
+proxies = {"http":args.user_proxy, "https":args.user_proxy} if (args.user_proxy != None) else {}
 
 test_case_msg = r"{0}: Status codes ({1}) - Body lengths ({2})"
 
